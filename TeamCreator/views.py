@@ -19,7 +19,7 @@ def index(request):
 def validate_csv_content(all):
     lines = len(all.splitlines())
     # Including the header line.
-    return lines > 1 and lines < 422
+    return 1 < lines < 422
 
 
 def parse_csv_content(csv):
@@ -45,6 +45,7 @@ def parse_csv_content(csv):
 
     return all_students
 
+
 def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -52,16 +53,17 @@ def upload_file(request):
         if form.is_valid():
             logging.error("POST file, valid")
             content = str()
-            for bytes in request.FILES['file'].chunks():
-                text = bytes.decode('utf-8')
+            for binary_bytes in request.FILES['file'].chunks():
+                text = binary_bytes.decode('utf-8')
                 # logging.warning(text)
                 content += text
             valid = validate_csv_content(content)
             if valid:
                 request.session['csv_content'] = content
-                return HttpResponseRedirect('/teams')
+                return render(request, 'TeamCreator/upload.html', {'form': form, 'create_button_visibility': 'visible'})
             else:
-                return render(request, 'TeamCreator/upload.html', {'form': form, 'error': 'CVS file content is invalid.'})
+                return render(request, 'TeamCreator/upload.html',
+                              {'form': form, 'create_button_visibility': 'hidden', 'error': 'CVS file content is invalid.'})
 
     else:
         form = UploadFileForm()
@@ -69,8 +71,13 @@ def upload_file(request):
 
 
 def teams_list(request):
-    students = parse_csv_content(request.session['csv_content'])
-    workshop_groups = group_students(students)
-    total_groups = sum ( len(g) for g in workshop_groups.values())
-    logging.warning(f'Total groups: {total_groups}')
+    try:
+        students = parse_csv_content(request.session['csv_content'])
+        workshop_groups = group_students(students)
+        total_groups = sum(len(g) for g in workshop_groups.values())
+        logging.warning(f'Total groups: {total_groups}')
+    except:
+        logging.error('Create team failed.')
+        return render(request, 'TeamCreator/error.html', {'error': 'Create teams failed.'})
+
     return render(request, 'TeamCreator/team_list.html', {'total_groups': total_groups})
