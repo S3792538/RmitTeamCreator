@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Team Creator</title>
+</head>
+<body>
+
+<label for="csvfile">Select a CSV file to upload:</label>
+<input type="file" id="csvfile" name="csvfile" accept=".csv">
+
+<p>Django form:</p>
+<form action="/upload_file/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>
