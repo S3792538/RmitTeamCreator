@@ -29,6 +29,8 @@ def group_students(students):
     workshop_team_sizes = {}
     for wk, cnt in workshops.items():
         logging.warning(f'{wk}: {cnt}')
+        if cnt > 35:
+            raise Exception('Max students in a workshop exceed 35!')
 
         for team_size in [5, 6, 7]:
             team_cnt = float(cnt) / team_size

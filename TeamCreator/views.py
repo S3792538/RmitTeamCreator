@@ -63,7 +63,8 @@ def upload_file(request):
                 return render(request, 'TeamCreator/upload.html', {'form': form, 'create_button_visibility': 'visible'})
             else:
                 return render(request, 'TeamCreator/upload.html',
-                              {'form': form, 'create_button_visibility': 'hidden', 'error': 'CVS file content is invalid.'})
+                              {'form': form, 'create_button_visibility': 'hidden',
+                               'error': 'CVS file content is invalid.'})
 
     else:
         form = UploadFileForm()
@@ -76,8 +77,8 @@ def teams_list(request):
         workshop_groups = group_students(students)
         total_groups = sum(len(g) for g in workshop_groups.values())
         logging.warning(f'Total groups: {total_groups}')
-    except:
+    except Exception as e:
         logging.error('Create team failed.')
-        return render(request, 'TeamCreator/error.html', {'error': 'Create teams failed.'})
+        return render(request, 'TeamCreator/error.html', {'error': 'Create teams failed.' + str(e)})
 
     return render(request, 'TeamCreator/team_list.html', {'total_groups': total_groups})
