@@ -43,7 +43,8 @@ def group_students(students):
 
     workshop_groups = {}
     for wk, team_size in workshop_team_sizes.items():
-        groups = []
+        group_id = 1
+        groups = {}
         group = []
         for student in students:
             if student.Workshop != wk:
@@ -51,7 +52,8 @@ def group_students(students):
             if len(group) < team_size:
                 group.append(student)
             else:
-                groups.append(group.copy())
+                groups[group_id] = group.copy()
+                group_id += 1
                 group.clear()
 
         workshop_groups[wk] = groups
@@ -59,10 +61,8 @@ def group_students(students):
     # print
     for wk, groups in workshop_groups.items():
 
-        i = 1
-        for group in groups:
-            logging.warning(f'Workshop: [{wk}] Group[{i}]')
-            i = i + 1
+        for id, group in groups.items():
+            logging.warning(f'Workshop: [{wk}] Group[{id}]')
             for student in group:
                 logging.warning(f'\t\t student: [{student.Student_ID}] {student.Name}')
 

@@ -6,23 +6,32 @@
 </head>
 <body>
 
-
-<p>
-    The teams create successful！
-</p>
 <p>
     Teams created based on the uploaded CVS file:
 </p>
 <p>
     Total {{ total_groups }} groups.
 </p>
-
+{% for workshop, groups in workshop_groups.items %}
+{% for id, group in groups.items %}
 <table>
-    <thead>Team 1</thead>
-    <tr>
-        <td></td>
-    </tr>
+<thead>
+  <tr>
+    <th colspan="2">Workshop {{ workshop }}, Group {{ id }}</th>
+  </tr>
+</thead>
+<tbody>
+    {% for studtent in group %}
+  <tr>
+    <td>{{ studtent.Student_ID }}</td>
+    <td>{{ studtent.Name }}</td>
+  </tr>
+    {% endfor %}
+</tbody>
 </table>
-
+    <h3>---------------</h3>
+{% endfor %}
+    <h1>=====================</h1>
+{% endfor %}
 </body>
 </html>
