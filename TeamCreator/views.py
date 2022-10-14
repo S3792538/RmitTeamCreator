@@ -78,7 +78,7 @@ def upload_file(request):
             else:
                 return render(request, 'TeamCreator/upload.html',
                               {'form': form, 'create_button_visibility': 'hidden',
-                               'error': 'CVS file content is invalid.'})
+                               'error': 'The file content is invalid.'})
 
     else:
         form = UploadFileForm()
